@@ -1,0 +1,129 @@
+{{define "external_access.html"}}
+<div id="external-access-view" class="view" style="display: none">
+  <div class="tool-view-wrapper">
+    <div class="card">
+      <div class="title-with-button">
+        <div>
+          <h2 class="card-title">External IP Access</h2>
+          <p class="card-subtitle">
+            Grant temporary access from an external IP/CIDR.
+          </p>
+        </div>
+        <a href="#" id="back-to-menu-btn-ext" class="back-button">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span>Back to Menu</span>
+        </a>
+      </div>
+
+      <form id="external-access-form" onsubmit="return false;">
+        <h3 class="form-section-title">Source</h3>
+        <div class="form-grid single-col">
+          <div class="form-group">
+            <label for="ea-cidr">Source IP / CIDR</label>
+            <input
+              type="text"
+              id="ea-cidr"
+              required
+              placeholder="e.g., 1.2.3.4 or 1.2.3.0/24"
+            />
+          </div>
+        </div>
+
+        <h3 class="form-section-title">Target Service</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="ea-ns-filter" class="label-with-button">
+              <span>Namespace</span>
+              <button
+                id="refresh-ea-services-btn"
+                type="button"
+                class="btn btn-icon"
+              >
+                <span class="material-symbols-outlined">refresh</span>
+              </button>
+            </label>
+            <select id="ea-ns-filter"></select>
+          </div>
+          <div class="form-group">
+            <label for="ea-service">Service</label>
+            <select id="ea-service" required></select>
+          </div>
+        </div>
+
+        <h3 class="form-section-title">Policy Rules</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="ea-direction">Direction</label>
+            <select id="ea-direction" required>
+              <option value="all" selected>Both (Ingress & Egress)</option>
+              <option value="ingress">Ingress (from External IP)</option>
+              <option value="egress">Egress (to External IP)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ea-ports">Port Overrides (optional)</label>
+            <input type="text" id="ea-ports" placeholder="e.g., 443, 8080" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px">
+          <label for="ea-description"
+            >Description / Justification (optional)</label
+          >
+          <input
+            type="text"
+            id="ea-description"
+            placeholder="e.g., Debugging ticket R-XXXXXX"
+          />
+        </div>
+
+        <div class="form-group" style="margin-top: 16px">
+          <label for="ea-duration">Duration</label>
+          <select id="ea-duration" required>
+            <option value="300">5 Minutes</option>
+            <option value="1800">30 Minutes</option>
+            <option value="3600" selected>1 Hour</option>
+            <option value="14400">4 Hours</option>
+            <option value="28800">8 Hours</option>
+            <option value="86400">24 Hours</option>
+            <option value="604800">7 days</option>
+            <option value="-1">Infinite (No expiry)</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button
+            id="ea-submit-review-btn"
+            class="btn btn-filled submit-review-btn"
+          >
+            <span class="material-symbols-outlined">rate_review</span>
+            Submit for Review
+          </button>
+          <button id="ea-create-btn" class="btn btn-filled">
+            <span class="material-symbols-outlined">shield_lock</span>
+            Create Access
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="title-with-button">
+        <h2 class="card-title">
+          <span class="material-symbols-outlined">policy</span> Active External
+          Access
+        </h2>
+        <button id="refresh-access-btn-ext" class="btn btn-icon">
+          <span class="material-symbols-outlined">refresh</span>
+        </button>
+      </div>
+      <div id="active-access-list-ext" class="log-container"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title">
+        <span class="material-symbols-outlined">dvr</span> Tool Activity Log
+      </h2>
+      <div id="results-log-ext" class="log-container"></div>
+    </div>
+  </div>
+</div>
+{{end}}

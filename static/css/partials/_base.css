@@ -1,0 +1,63 @@
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/static/fonts/orbitron-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/static/fonts/orbitron-bold.woff2') format('woff2');
+}
+
+:root {
+  --md-sys-color-primary: #3f51b5;
+  --md-sys-color-surface-container-highest: #ffffff;
+  --md-sys-color-surface: #f8f9fa;
+  --md-sys-color-on-surface: #202124;
+  --md-sys-color-on-surface-variant: #5f6368;
+  --md-sys-color-outline: #caced9;
+  --md-sys-color-outline-variant: #dee2e6;
+  --md-sys-color-tertiary: #6750a4;
+  --md-sys-color-review-action: #6750a4;
+  --md-sys-color-on-review-action: #ffffff;
+  --md-sys-color-error: #b3261e;
+  --md-sys-color-on-error: #ffffff;
+  --log-color-success: #1e8e3e;
+  --log-color-error: #d93025;
+  --log-color-warning: #f9ab00;
+  --log-color-info: #5f6368;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  font-family: 'Inter', sans-serif;
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+th {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface-variant);
+}

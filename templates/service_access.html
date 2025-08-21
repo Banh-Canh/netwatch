@@ -1,0 +1,132 @@
+{{define "service_access.html"}}
+<div id="service-access-view" class="view" style="display: none">
+  <div class="tool-view-wrapper">
+    <div class="card">
+      <div class="title-with-button">
+        <div>
+          <h2 class="card-title">Service-to-Service Access</h2>
+          <p class="card-subtitle">
+            Create temporary network rules between two services.
+          </p>
+        </div>
+        <a href="#" id="back-to-menu-btn-svc" class="back-button">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span>Back to Menu</span>
+        </a>
+      </div>
+
+      <form id="cluster-access-form" onsubmit="return false;">
+        <h3 class="form-section-title">Source Service</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="ca-source-ns-filter" class="label-with-button">
+              <span>Namespace</span>
+              <button
+                type="button"
+                id="refresh-services-btn"
+                class="btn btn-icon"
+              >
+                <span class="material-symbols-outlined">refresh</span>
+              </button>
+            </label>
+            <select id="ca-source-ns-filter"></select>
+          </div>
+          <div class="form-group">
+            <label for="ca-source-svc">Service</label>
+            <select id="ca-source-svc" required></select>
+          </div>
+        </div>
+
+        <h3 class="form-section-title">Target Service</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="ca-target-ns-filter">Namespace</label>
+            <select id="ca-target-ns-filter"></select>
+          </div>
+          <div class="form-group">
+            <label for="ca-target-svc">Service</label>
+            <select id="ca-target-svc" required></select>
+          </div>
+        </div>
+
+        <h3 class="form-section-title">Policy Rules</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="ca-direction">Direction</label>
+            <select id="ca-direction" required>
+              <option value="both" selected>Both (Egress + Ingress)</option>
+              <option value="egress">Egress Only (Source → Target)</option>
+              <option value="ingress">Ingress Only (Target → Source)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ca-ports">Port Overrides (optional)</label>
+            <input
+              type="text"
+              id="ca-ports"
+              placeholder="e.g., 80, 5432, 9090"
+            />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px">
+          <label for="ca-description"
+            >Description / Justification (optional)</label
+          >
+          <input
+            type="text"
+            id="ca-description"
+            placeholder="e.g., Debugging ticket R-XXXXXX"
+          />
+        </div>
+
+        <div class="form-group" style="margin-top: 16px">
+          <label for="ca-duration">Duration</label>
+          <select id="ca-duration" required>
+            <option value="300">5 Minutes</option>
+            <option value="1800">30 Minutes</option>
+            <option value="3600" selected>1 Hour</option>
+            <option value="14400">4 Hours</option>
+            <option value="28800">8 Hours</option>
+            <option value="86400">24 Hours</option>
+            <option value="604800">7 days</option>
+            <option value="-1">Infinite (No expiry)</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button
+            id="ca-submit-review-btn"
+            class="btn btn-filled submit-review-btn"
+          >
+            <span class="material-symbols-outlined">rate_review</span>
+            Submit for Review
+          </button>
+          <button id="ca-create-btn" class="btn btn-filled">
+            <span class="material-symbols-outlined">shield_lock</span>
+            Create Access
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="title-with-button">
+        <h2 class="card-title">
+          <span class="material-symbols-outlined">policy</span> Active Service
+          Access
+        </h2>
+        <button id="refresh-access-btn-svc" class="btn btn-icon">
+          <span class="material-symbols-outlined">refresh</span>
+        </button>
+      </div>
+      <div id="active-access-list-svc" class="log-container"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title">
+        <span class="material-symbols-outlined">dvr</span> Tool Activity Log
+      </h2>
+      <div id="results-log-svc" class="log-container"></div>
+    </div>
+  </div>
+</div>
+{{end}}

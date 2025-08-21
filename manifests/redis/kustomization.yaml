@@ -1,0 +1,4 @@
+namespace: netwatch-system
+resources:
+  - ./deploy.yaml
+  - ./svc.yaml

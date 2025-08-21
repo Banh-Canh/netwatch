@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: netwatch
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: netwatch-cleanup-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: netwatch-manager-role
+rules:
+  # Permissions for Netwatch's own AccessRequest CRD.
+  # The webserver needs full control to manage the request lifecycle.
+  - apiGroups: ['netwatch.vtk.io']
+    resources: ['accessrequests']
+    verbs: ['create', 'get', 'list', 'delete']
+  # Permissions to list services from the core API group.
+  # Required to populate the service dropdowns in the UI.
+  - apiGroups: ['']
+    resources: ['services']
+    verbs: ['get', 'list']
+  # Permissions to list maxtac Access and ExternalAccess resources.
+  # Required for displaying the "Active Access" list and finding revocation pairs.
+  - apiGroups: ['maxtac.vtk.io']
+    resources: ['accesses', 'externalaccesses']
+    verbs: ['list']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: netwatch-cleanup-role
+rules:
+  # Permissions to manage finalizers on the maxtac resources.
+  # The controller needs to get the resource to see the deletion timestamp,
+  # and update it to add/remove the finalizer.
+  - apiGroups: ['maxtac.vtk.io']
+    resources: ['accesses', 'externalaccesses']
+    verbs: ['get', 'update']
+  # Permissions to list and delete the cloned services.
+  # This is the core function of the cleanup controller.
+  - apiGroups: ['']
+    resources: ['services']
+    verbs: ['list', 'delete']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: netwatch-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: netwatch-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: netwatch
+    namespace: netwatch-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: netwatch-cleanup-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: netwatch-cleanup-role
+subjects:
+  - kind: ServiceAccount
+    name: netwatch-cleanup-controller
+    namespace: netwatch-system

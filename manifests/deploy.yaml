@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netwatch
+  labels:
+    app.kubernetes.io/name: netwatch
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: netwatch
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: netwatch
+    spec:
+      serviceAccountName: netwatch
+      containers:
+        - name: netwatch
+          args:
+            - server
+            - --log-level=info
+          command:
+            - /netwatch
+          image: netwatch:v0.0.0
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: NETWATCH_SESSION_SECRET # 32 or 64 bytes random number to encrypt cookies
+              valueFrom:
+                secretKeyRef:
+                  name: netwatch-secrets
+                  key: session_secret
+            - name: NETWATCH_SESSION_TTL
+              value: '3600'
+            - name: OIDC_ISSUER_URL
+              value: 'https://your-oidc-issuer.com' # REPLACE with your OIDC issuer URL
+            - name: OIDC_CLIENT_ID
+              value: 'your-client-id' # REPLACE with your OIDC client ID
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: netwatch-secrets # A Kubernetes Secret containing your client secret
+                  key: client_secret
+            - name: REDIS_ADDR
+              value: 'redis:6379' # REPLACE with your Redis service address
+            - name: REDIS_USERNAME # optional
+              value: ''
+            - name: REDIS_PASSWORD # optional
+              value: ''
+            - name: NETWATCH_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: netwatch-secrets # A Kubernetes Secret containing your static API token, used to access api without oidc
+                  key: api_token

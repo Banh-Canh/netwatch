@@ -1,0 +1,41 @@
+version: 2
+before:
+  hooks:
+    - go mod tidy
+    - bash -c 'source /nix/var/nix/profiles/default/etc/profile.d/nix.sh && cat $(nix-build ./nix/manifests-with-maxtac-redis.nix --argstr imageName banhcanh/netwatch --argstr imageTag v{{ .Version }})/bundle.yaml > bundle-maxtac-redis.yaml'
+    - bash -c 'source /nix/var/nix/profiles/default/etc/profile.d/nix.sh && cat $(nix-build ./nix/manifests-with-maxtac-noredis.nix --argstr imageName banhcanh/netwatch --argstr imageTag v{{ .Version }})/bundle.yaml > bundle-maxtac-noredis.yaml'
+    - bash -c 'source /nix/var/nix/profiles/default/etc/profile.d/nix.sh && cat $(nix-build ./nix/manifests-without-maxtac-redis.nix --argstr imageName banhcanh/netwatch --argstr imageTag v{{ .Version }})/bundle.yaml > bundle-nomaxtac-redis.yaml'
+    - bash -c 'source /nix/var/nix/profiles/default/etc/profile.d/nix.sh && cat $(nix-build ./nix/manifests-without-maxtac-no-redis.nix --argstr imageName banhcanh/netwatch --argstr imageTag v{{ .Version }})/bundle.yaml > bundle-nomaxtac-noredis.yaml'
+builds:
+  - binary: netwatch
+    main: ./
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    ldflags:
+      - -s -w -X github.com/Banh-Canh/netwatch/cmd.version=v{{- .Version }}
+archives:
+  - formats: ['tar.gz']
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_v{{- .Version }}_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64 {{- else if eq .Arch "386" }}i386 {{- else }}{{ .Arch }}{{ end }} {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        formats: ['zip']
+    files:
+      - README.md
+      - LICENSE
+release:
+  extra_files:
+    - glob: ./bundle-maxtac-redis.yaml
+    - glob: ./bundle-maxtac-noredis.yaml
+    - glob: ./bundle-nomaxtac-redis.yaml
+    - glob: ./bundle-nomaxtac-noredis.yaml

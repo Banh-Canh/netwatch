@@ -1,0 +1,160 @@
+.tool-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.empty-state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+  background-color: #fafafa;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 8px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.empty-state-message .material-symbols-outlined {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: var(--log-color-success);
+}
+
+.empty-state-message p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+tr.access-pending {
+  background-color: #fff8e1;
+  /* A light yellow/orange color */
+}
+
+tr.access-pending:hover {
+  background-color: #fff1c6;
+  /* A slightly darker shade for hover */
+}
+
+small.perm-needed {
+  font-family: monospace;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+small.perm-satisfied {
+  font-family: monospace;
+  color: var(--log-color-success);
+  text-decoration: line-through;
+}
+
+small.perm-satisfied::before {
+  content: '✓ ';
+  color: var(--log-color-success);
+  text-decoration: none;
+  /* Prevent the checkmark from being struck through */
+  display: inline-block;
+}
+
+.label-with-button,
+.title-with-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* --- Cyberpunk Quote and Multi-Line Animation Styles --- */
+
+/* Keyframe for the footer fade-in */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.cyber-quote {
+  border-left: 4px solid var(--log-color-warning);
+  background-color: var(--md-sys-color-surface);
+  padding: 16px 24px;
+  margin: 16px 0;
+  border-radius: 8px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* Base style for each line of text */
+.cyber-quote .quote-text span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  /* All lines start hidden */
+  font-family: 'Orbitron', 'Courier New', Courier, monospace;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Animation for Line 1 */
+@keyframes typing-line-1 {
+  from {
+    width: 0ch;
+  }
+
+  to {
+    width: 68ch;
+  }
+}
+
+.cyber-quote .quote-text span:nth-child(1) {
+  animation: typing-line-1 1.8s steps(68) forwards;
+}
+
+/* Animation for Line 2 */
+@keyframes typing-line-2 {
+  from {
+    width: 0ch;
+  }
+
+  to {
+    width: 55ch;
+  }
+}
+
+.cyber-quote .quote-text span:nth-child(2) {
+  animation: typing-line-2 1.5s steps(55) 1.9s forwards;
+}
+
+/* Animation for Line 3 */
+@keyframes typing-line-3 {
+  from {
+    width: 0ch;
+  }
+
+  to {
+    width: 52ch;
+  }
+}
+
+.cyber-quote .quote-text span:nth-child(3) {
+  animation: typing-line-3 1.5s steps(52) 3.5s forwards;
+}
+
+.cyber-quote footer {
+  margin-top: 12px;
+  text-align: right;
+  font-family: 'Orbitron', 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 700;
+  color: #aaa;
+  letter-spacing: 1px;
+
+  opacity: 0;
+  animation: fade-in 1s ease 5s forwards;
+}

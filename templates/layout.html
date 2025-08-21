@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Netwatch Controller</title>
+    <link rel="stylesheet" href="/static/vendor/css/material_symbols.css" />
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="title">
+        <span class="material-symbols-outlined">dns</span> <span>Netwatch</span>
+      </div>
+      <div class="user-info">
+        {{if .IDToken}}
+        <div class="user-detail">
+          <span class="material-symbols-outlined">lan</span>
+          <span>{{.UserIP}}</span>
+        </div>
+        <div class="user-detail">
+          <span class="material-symbols-outlined">person</span>
+          <span>{{.User}}</span>
+        </div>
+        <a href="/logout" class="btn btn-text">Logout</a>
+        {{end}}
+      </div>
+    </header>
+    <main class="container">
+      {{if .IDToken}}
+
+      <!-- These templates will be rendered and injected into the 'content' block -->
+      {{template "main_menu.html" .}} {{template "service_access.html" .}}
+      {{template "external_access.html" .}} {{template "request_hub.html" .}}
+      {{else}}
+      <div class="card" style="text-align: center; margin-top: 10vh">
+        <h2>Welcome</h2>
+        <p>Please log in to continue to the Netwatch Controller.</p>
+        <br />
+        <a href="/login" class="btn btn-filled">Login with OIDC</a>
+      </div>
+      {{end}}
+    </main>
+    {{if .IDToken}}
+    <script>
+      const sessionExpiresAt = {{.SessionExpiresAt}};
+      const currentUserEmail = '{{.User}}';
+    </script>
+    <!-- Link to external JavaScript -->
+    <script src="/static/js/app.js" type="module"></script>
+    {{end}}
+  </body>
+</html>

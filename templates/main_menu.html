@@ -1,0 +1,92 @@
+{{define "main_menu.html"}}
+<div id="main-menu-view" class="view">
+  <div class="menu-header">
+    <h2 style="font-weight: 500">Netwatch</h2>
+    <blockquote class="cyber-quote">
+      <div class="quote-text">
+        <span
+          >Connection established. NetWatch has logged your cognitive
+          uptime.</span
+        >
+        <span>Unsanctioned data traces detected from your REM cycle.</span>
+        <span>Keep your thoughts within sanctioned network space.</span>
+      </div>
+      <footer>— NETWATCH DIAGNOSTIC {{ .Version }}</footer>
+    </blockquote>
+    <p style="margin-top: 24px">
+      Select a utility to manage temporary network access policies within the
+      cluster.
+    </p>
+  </div>
+  <div class="menu-grid">
+    <div id="goto-service-access-card" class="menu-card">
+      <div class="menu-card-icon-wrapper">
+        <span class="material-symbols-outlined">hub</span>
+      </div>
+      <div class="menu-card-content">
+        <h3>Service-to-Service Access</h3>
+        <p>
+          Create or request temporary network access between services inside the
+          cluster.
+        </p>
+      </div>
+      <span class="material-symbols-outlined menu-card-arrow"
+        >arrow_forward</span
+      >
+    </div>
+    <div id="goto-external-access-card" class="menu-card">
+      <div class="menu-card-icon-wrapper">
+        <span class="material-symbols-outlined">public</span>
+      </div>
+      <div class="menu-card-content">
+        <h3>External IP Access</h3>
+        <p>
+          Create or request temporary network access from an external IP to a
+          single service.
+        </p>
+      </div>
+      <span class="material-symbols-outlined menu-card-arrow"
+        >arrow_forward</span
+      >
+    </div>
+    <div id="goto-hub-card" class="menu-card">
+      <div class="menu-card-icon-wrapper">
+        <span class="material-symbols-outlined">approval</span>
+      </div>
+      <div class="menu-card-content">
+        <h3>Access Request Hub</h3>
+        <p>
+          Review and approve pending access requests submitted by other users.
+        </p>
+      </div>
+      <span class="material-symbols-outlined menu-card-arrow"
+        >arrow_forward</span
+      >
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 32px">
+    <div class="title-with-button">
+      <h2 class="card-title" style="margin-bottom: 0">
+        <span class="material-symbols-outlined">policy</span> All Active Access
+      </h2>
+      <button id="refresh-access-btn-dashboard" class="btn btn-icon">
+        <span class="material-symbols-outlined">refresh</span>
+      </button>
+    </div>
+    <div
+      id="active-access-list-dashboard"
+      class="log-container"
+      style="margin-top: 8px"
+    >
+      <p>Loading active access policies...</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top: 24px">
+    <h2 class="card-title">
+      <span class="material-symbols-outlined">dvr</span> Global Activity Log
+    </h2>
+    <div id="results-log-dashboard" class="log-container"></div>
+  </div>
+</div>
+{{end}}

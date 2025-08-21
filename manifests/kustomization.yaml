@@ -1,0 +1,14 @@
+namespace: netwatch-system
+resources:
+  - ./crds/netwatch.vtk.io_accessrequests.yaml
+  - ./rbacs/rbacs.yaml
+  - ./deploy.yaml
+  - ./deploy-controller.yaml
+  - ./namespace.yaml
+  - ./svc.yaml
+  - ./svc-controller.yaml
+images:
+  - name: netwatch
+    newTag: v0.0.0
+  - name: netwatch-controller
+    newTag: v0.0.0

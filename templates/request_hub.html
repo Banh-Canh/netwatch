@@ -1,0 +1,31 @@
+{{define "request_hub.html"}}
+<div id="access-request-hub-view" class="view" style="display: none">
+  <div class="tool-view-wrapper">
+    <div class="card">
+      <div class="title-with-button">
+        <div>
+          <h2 class="card-title">Access Request Hub</h2>
+          <p class="card-subtitle">
+            Review and approve pending access requests.
+          </p>
+        </div>
+        <a href="#" id="back-to-menu-btn-hub" class="back-button">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span>Back to Menu</span>
+        </a>
+      </div>
+      <div class="log-container" id="pending-requests-list">
+        <p>Loading pending requests...</p>
+      </div>
+      <div
+        class="empty-state-message"
+        id="no-pending-requests-message"
+        style="display: none"
+      >
+        <span class="material-symbols-outlined">check_circle</span>
+        <p>No pending requests at this time.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
