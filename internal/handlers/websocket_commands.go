@@ -231,8 +231,8 @@ func (p *webSocketCommandProcessor) handleRequestClusterAccess(payload webSocket
 
 	cloneID := uuid.New().String()
 	randSuffix := hex.EncodeToString([]byte(cloneID))[:8]
-	sourceCloneName := fmt.Sprintf("netwatch-clone-%s-%s", sourceName, randSuffix)
-	targetCloneName := fmt.Sprintf("netwatch-clone-%s-%s", targetName, randSuffix)
+	sourceCloneName := fmt.Sprintf("nc-%s-%s", shortHash(sourceName), randSuffix)
+	targetCloneName := fmt.Sprintf("nc-%s-%s", shortHash(targetName), randSuffix)
 	commonRequestLabel := map[string]string{"netwatch.vtk.io/request-id": cloneID}
 
 	sourceClone, err := k8s.CloneService(p.ctx, userKubeClient, sourceNs, sourceName, sourceCloneName, commonRequestLabel, overridePorts)
@@ -810,7 +810,7 @@ func (p *webSocketCommandProcessor) createPartialAccess(
 			Duration:        durationStr,
 			ServiceSelector: &metav1.LabelSelector{MatchLabels: commonRequestLabel},
 			Targets: []vtkiov1alpha1.AccessPoint{
-				{ServiceName: fmt.Sprintf("netwatch-clone-%s-%s", remoteName, randSuffix), Namespace: remoteNs},
+				{ServiceName: fmt.Sprintf("nc-%s-%s", shortHash(remoteName), randSuffix), Namespace: remoteNs},
 			},
 		},
 	}

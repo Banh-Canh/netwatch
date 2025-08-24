@@ -191,7 +191,7 @@ func GetServices(c *gin.Context) {
 
 	var serviceInfos []ServiceInfo
 	for _, svc := range serviceList.Items {
-		if svc.Namespace == "kube-system" || strings.HasPrefix(svc.Name, "netwatch-clone-") {
+		if svc.Namespace == "kube-system" || strings.HasPrefix(svc.Name, "nc-") {
 			continue
 		}
 		serviceInfos = append(serviceInfos, ServiceInfo{
@@ -290,7 +290,7 @@ func GetActiveAccesses(c *gin.Context) {
 				info.Status = "Pending"
 				clone := clones[0]
 				info.Source = clone.Annotations["netwatch.vtk.io/cloned-from"]
-				targetSvcString := fmt.Sprintf("%s/%s", access.Spec.Targets[0].Namespace, strings.Replace(strings.Replace(access.Spec.Targets[0].ServiceName, "netwatch-clone-", "", 1), "-"+hex.EncodeToString([]byte(reqID))[:8], "", 1))
+				targetSvcString := fmt.Sprintf("%s/%s", access.Spec.Targets[0].Namespace, strings.Replace(strings.Replace(access.Spec.Targets[0].ServiceName, "nc-", "", 1), "-"+hex.EncodeToString([]byte(reqID))[:8], "", 1))
 				info.Target = fmt.Sprintf("%s (Pending Approval)", targetSvcString)
 				info.Ports = clone.Annotations["netwatch.vtk.io/ports"]
 			} else {

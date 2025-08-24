@@ -13,6 +13,9 @@ kind: ClusterRole
 metadata:
   name: netwatch-manager-role
 rules:
+  - apiGroups: ['authorization.k8s.io']
+    resources: ['subjectaccessreviews']
+    verbs: ['create']
   # Permissions for Netwatch's own AccessRequest CRD.
   # The webserver needs full control to manage the request lifecycle.
   - apiGroups: ['netwatch.vtk.io']
