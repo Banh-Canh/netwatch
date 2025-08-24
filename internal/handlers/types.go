@@ -1,4 +1,3 @@
-// internal/handlers/types.go
 package handlers
 
 // LogEntry defines the structure for a persisted log message sent to the frontend (the activity log box !)

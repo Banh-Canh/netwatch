@@ -2,14 +2,14 @@
   font-family: 'Orbitron';
   font-style: normal;
   font-weight: 400;
-  src: url('/static/fonts/orbitron-regular.woff2') format('woff2');
+  src: url('/static/vendor/fonts/orbitron-regular.woff2') format('woff2');
 }
 
 @font-face {
   font-family: 'Orbitron';
   font-style: normal;
   font-weight: 700;
-  src: url('/static/fonts/orbitron-bold.woff2') format('woff2');
+  src: url('/static/vendor/fonts/orbitron-bold.woff2') format('woff2');
 }
 
 :root {

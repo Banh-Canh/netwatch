@@ -1,4 +1,3 @@
-// internal/handlers/oidc_handlers.go
 package handlers
 
 import (

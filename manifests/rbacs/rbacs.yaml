@@ -13,6 +13,23 @@ kind: ClusterRole
 metadata:
   name: netwatch-manager-role
 rules:
+  - apiGroups: [''] # Core API group
+    resources: ['users', 'groups', 'serviceaccounts']
+    verbs: ['impersonate']
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  # This is required by the client-go/controller-runtime libraries to initialize
+  # a client that can then perform impersonation.
+  - apiGroups: [''] # The empty string "" targets the core API group discovery endpoints.
+    resources: ['']
+    verbs: ['get']
+  - apiGroups: ['*'] # The "*" targets all other API group discovery endpoints.
+    resources: ['']
+    verbs: ['get']
   - apiGroups: ['authorization.k8s.io']
     resources: ['subjectaccessreviews']
     verbs: ['create']
@@ -26,11 +43,14 @@ rules:
   - apiGroups: ['']
     resources: ['services']
     verbs: ['get', 'list']
+  - apiGroups: ['']
+    resources: ['namespaces']
+    verbs: ['get', 'list', 'watch']
   # Permissions to list maxtac Access and ExternalAccess resources.
   # Required for displaying the "Active Access" list and finding revocation pairs.
   - apiGroups: ['maxtac.vtk.io']
     resources: ['accesses', 'externalaccesses']
-    verbs: ['list']
+    verbs: ['list', 'get', 'watch']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -42,12 +62,24 @@ rules:
   # and update it to add/remove the finalizer.
   - apiGroups: ['maxtac.vtk.io']
     resources: ['accesses', 'externalaccesses']
-    verbs: ['get', 'update']
+    verbs: ['get', 'update', 'list', 'watch']
   # Permissions to list and delete the cloned services.
   # This is the core function of the cleanup controller.
   - apiGroups: ['']
     resources: ['services']
-    verbs: ['list', 'delete']
+    verbs: ['list', 'delete', 'list', 'watch']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: netwatch-cleanup-role
+rules:
+  - apiGroups: ['coordination.k8s.io']
+    resources: ['leases']
+    verbs: ['create', 'get', 'list', 'update']
+  - apiGroups: ['']
+    resources: ['events']
+    verbs: ['create', 'patch']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -69,6 +101,19 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
+  name: netwatch-cleanup-role
+subjects:
+  - kind: ServiceAccount
+    name: netwatch-cleanup-controller
+    namespace: netwatch-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: netwatch-cleanup-rolebinding-ns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
   name: netwatch-cleanup-role
 subjects:
   - kind: ServiceAccount

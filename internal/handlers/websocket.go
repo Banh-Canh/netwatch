@@ -1,4 +1,3 @@
-// internal/handlers/websocket.go
 package handlers
 
 import (

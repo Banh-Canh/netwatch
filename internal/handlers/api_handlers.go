@@ -1,4 +1,3 @@
-// internal/handlers/api_handlers.go
 package handlers
 
 import (
