@@ -1,12 +1,13 @@
 {
   pkgs ? import <nixpkgs> { },
+  version ? "dev",
 }:
 let
   inherit (pkgs.lib) cleanSource cleanSourceWith;
 in
 pkgs.buildGoModule {
   pname = "netwatch";
-  version = "nix";
+  version = "${version}";
 
   src = cleanSourceWith {
     filter =
@@ -22,6 +23,11 @@ pkgs.buildGoModule {
       );
     src = cleanSource ../.;
   };
+  ldflags = [
+    "-s"
+    "-w"
+    "-X github.com/Banh-Canh/netwatch/cmd.version=${version}"
+  ];
 
   vendorHash = "sha256-SbC3ya8K7RKBG2t6qqVJjHviCuYpXxijz5Q4oFGE+Gg=";
 

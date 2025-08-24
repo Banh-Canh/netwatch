@@ -3,7 +3,7 @@
   dockerVersion ? "0.0.0",
 }:
 let
-  binaries = pkgs.callPackage ./binaries.nix { };
+  binaries = pkgs.callPackage ./binaries.nix { version = dockerVersion; };
   frontendAssets = pkgs.stdenv.mkDerivation {
     name = "netwatch-frontend-assets";
     src = pkgs.lib.cleanSource ../.;
