@@ -13,6 +13,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap" // Use the default zap logger for the manager
 
+	netwatchv1alpha1 "github.com/Banh-Canh/netwatch/api/v1alpha1"
 	"github.com/Banh-Canh/netwatch/internal/controller"
 	"github.com/Banh-Canh/netwatch/internal/utils/logger" // custom slog logger for the rest, it is preferred for me
 )
@@ -38,6 +39,7 @@ resources and manages the lifecycle of associated service clones.`,
 		scheme := runtime.NewScheme()
 		k8sScheme.AddToScheme(scheme)     //nolint:all
 		vtkiov1alpha1.AddToScheme(scheme) //nolint:all
+		netwatchv1alpha1.AddToScheme(scheme) //nolint:all
 
 		enableLeaderElection := true
 		if v, ok := os.LookupEnv("ENABLE_LEADER_ELECTION"); ok {

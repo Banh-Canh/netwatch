@@ -29,7 +29,7 @@ pkgs.buildGoModule {
     "-X github.com/Banh-Canh/netwatch/cmd.version=${version}"
   ];
 
-  vendorHash = "sha256-SbC3ya8K7RKBG2t6qqVJjHviCuYpXxijz5Q4oFGE+Gg=";
+  vendorHash = "sha256-RQCjr9vOfOimkbUqvkxP62B/CeLIvhcqNJ0SCXAxYf0=";
 
   doCheck = true;
 
