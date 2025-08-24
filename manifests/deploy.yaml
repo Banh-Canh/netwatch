@@ -24,7 +24,7 @@ spec:
             - /netwatch
           image: netwatch:v0.0.0
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
               name: http
           env:
             - name: NETWATCH_SESSION_SECRET # 32 or 64 bytes random number to encrypt cookies
