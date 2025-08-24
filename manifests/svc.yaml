@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: netwatch
+  name: netwatch-service
   labels:
-    app.kubernetes.io/name: netwatch
+    app.kubernetes.io/name: netwatch-service
 spec:
   type: ClusterIP
   ports:
