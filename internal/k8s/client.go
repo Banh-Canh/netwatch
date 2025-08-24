@@ -68,6 +68,11 @@ type UserInfo struct {
 	Groups []string
 }
 
+// GetAppKubeClient returns the pre-initialized, privileged application client.
+func GetAppKubeClient() client.Client {
+	return appKubeClient
+}
+
 // GetUserInfoFromToken verifies an OIDC token and extracts the user's email and groups.
 func GetUserInfoFromToken(ctx context.Context, idTokenString string) (*UserInfo, error) {
 	provider, err := oidc.NewProvider(ctx, os.Getenv("OIDC_ISSUER_URL"))

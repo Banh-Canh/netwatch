@@ -676,7 +676,7 @@ func (p *webSocketCommandProcessor) createPartialAccess(
 		return "", fmt.Errorf("could not clone local service: %w", err)
 	}
 
-	durationStr := fmt.Sprintf("%ds", payload.Duration)
+	durationStr := "" // empty until we get the second approval. so the timer doesn't start just yet.
 	commonAccessLabels := map[string]string{
 		"app.kubernetes.io/managed-by": "netwatch",
 		"netwatch.vtk.io/user":         p.sanitizedUsername,
@@ -914,14 +914,14 @@ func (p *webSocketCommandProcessor) approvePartialRequest(
 		return fmt.Errorf("could not clone missing service: %w", err)
 	}
 
-	durationStr := fmt.Sprintf("%ds", request.Spec.Duration)
+	durationStr := "" // Create the new (second) half of the access policy with an infinite duration for now.
 	commonAccessLabels := map[string]string{
 		"app.kubernetes.io/managed-by": "netwatch",
 		"netwatch.vtk.io/user":         p.sanitizedUsername,
 		"netwatch.vtk.io/request-id":   request.Spec.RequestID,
 	}
 
-	access := &vtkiov1alpha1.Access{
+	newAccess := &vtkiov1alpha1.Access{
 		ObjectMeta: metav1.ObjectMeta{Name: fmt.Sprintf("access-%s", localCloneName), Namespace: localNs, Labels: commonAccessLabels},
 		Spec: vtkiov1alpha1.AccessSpec{
 			Duration:        durationStr,
@@ -932,20 +932,39 @@ func (p *webSocketCommandProcessor) approvePartialRequest(
 
 	isSource := request.Spec.Status == "PendingSource"
 	if (request.Spec.Direction == "egress" && isSource) || (request.Spec.Direction == "ingress" && !isSource) {
-		access.Spec.Direction = "egress"
+		newAccess.Spec.Direction = "egress"
 	} else if (request.Spec.Direction == "ingress" && isSource) || (request.Spec.Direction == "egress" && !isSource) {
-		access.Spec.Direction = "ingress"
+		newAccess.Spec.Direction = "ingress"
 	} else {
-		access.Spec.Direction = "all"
+		newAccess.Spec.Direction = "all"
 	}
 
-	if err := k8s.CreateAccess(p.ctx, approverClient, access); err != nil {
+	if err := k8s.CreateAccess(p.ctx, approverClient, newAccess); err != nil {
 		if cleanupErr := k8s.DeleteService(p.ctx, approverClient, localNs, localCloneName); cleanupErr != nil &&
 			!k8s.IsNotFound(cleanupErr) {
 			logger.Logger.Error("Failed to cleanup partial service clone on approval", "error", cleanupErr)
 		}
 		return fmt.Errorf("could not create missing access policy: %w", err)
 	}
+	finalDurationStr := fmt.Sprintf("%ds", request.Spec.Duration)
+	appKubeClient := k8s.GetAppKubeClient()
+	// Update the original half using the retry helper
+	originalAccessName := fmt.Sprintf("access-%s", existingCloneName)
+	logger.Logger.Info("Updating original partial access with final duration", "name", originalAccessName, "namespace", remoteNs)
+	err = k8s.UpdateAccessWithRetry(p.ctx, appKubeClient, remoteNs, originalAccessName, func(access *vtkiov1alpha1.Access) {
+		access.Spec.Duration = finalDurationStr
+	})
+	if err != nil {
+		return fmt.Errorf("failed to update original partial access object: %w", err)
+	}
 
+	// Update the new half using the retry helper
+	logger.Logger.Info("Updating new partial access with final duration", "name", newAccess.Name, "namespace", newAccess.Namespace)
+	err = k8s.UpdateAccessWithRetry(p.ctx, appKubeClient, newAccess.Namespace, newAccess.Name, func(access *vtkiov1alpha1.Access) {
+		access.Spec.Duration = finalDurationStr
+	})
+	if err != nil {
+		return fmt.Errorf("failed to update new partial access object: %w", err)
+	}
 	return nil
 }
