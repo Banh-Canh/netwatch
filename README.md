@@ -1,8 +1,12 @@
 # Netwatch
 
+<img align=left src="assets/images/netwatch.png" width="170vw" />
+
 **Netwatch** is a secure, web-based UI and controller for managing temporary Kubernetes network access policies. It provides a user-friendly interface for developers to request and for administrators to approve temporary access between services or from external IPs, leveraging the power of the `maxtac` network policy engine.
 
 The entire workflow is Kubernetes-native, using Custom Resources for managing access requests and leveraging RBAC with OIDC for secure, impersonated operations.
+
+</br>
 
 <p align="center">
   <img src="./assets/images/netwatch-dash.png" alt="Netwatch UI Screenshot" width="800">
