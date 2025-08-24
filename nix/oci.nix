@@ -4,7 +4,21 @@
 }:
 let
   binaries = pkgs.callPackage ./binaries.nix { };
-  # trick to override the tag by processing the generated hash + making it dry
+  frontendAssets = pkgs.stdenv.mkDerivation {
+    name = "netwatch-frontend-assets";
+    src = pkgs.lib.cleanSource ../.;
+    installPhase = ''
+      # The final container will have two directories at its root: /static and /templates
+      mkdir -p $out/static
+      mkdir -p $out/templates
+
+      # Copy the Vite-bundled assets to /static
+      cp -r $src/static/* $out/static/
+
+      # Copy the Go HTML templates to /templates
+      cp $src/templates/*.html $out/templates/
+    '';
+  };
   makeDummyImage = {
     fakeRootCommands = ''
       ln -s var/run run
@@ -12,6 +26,7 @@ let
     '';
     name = binaries.pname;
     contents = [
+      frontendAssets
       binaries
       pkgs.dockerTools.caCertificates
       pkgs.openssl
@@ -28,7 +43,7 @@ let
       User = "1001:0";
       Entrypoint = [ "/netwatch" ];
       Env = [
-        "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+        "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
         "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       ];
     };
