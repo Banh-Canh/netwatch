@@ -142,6 +142,7 @@ This pattern ensures that Netwatch is a safe, additive system. When the Access o
 - The OIDC configured in your kubernetes cluster.
 - `kubectl` configured to connect to your cluster.
 - An OIDC provider (like Keycloak, Google, etc.) configured with a client for Netwatch.
+- Maxtac controller installed (it can be included in the bundle in the release page).
 
 ## ⚙️ Configuration
 
@@ -186,13 +187,13 @@ The downloaded `netwatch-bundle.yaml` file contains a `ConfigMap` and a `Secret`
 1. **Open `bundle-*.yaml`** in your preferred text editor.
 2. **Locate the `Deployment`** of netwatch. Update the environment variables fields with your configuration values, such as your OIDC issuer URL.
 
-## 🧑‍💻 Usage
-
-Login: Access the Netwatch UI in your browser and log in with your OIDC provider
-
 ### Step 3: Deployment
 
 Apply the bundle.
+
+## 🧑‍💻 Usage
+
+Login: Access the Netwatch UI in your browser and log in with your OIDC provider
 
 ### Select a Tool
 
